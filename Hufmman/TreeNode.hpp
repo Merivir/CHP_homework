@@ -13,7 +13,6 @@ private:
     TreeNode* m_left;
     TreeNode* m_right;
 
-    // Responsible for constructing and destroying the Huffman tree
     friend class HuffmanTree;
 };
 
