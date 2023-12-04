@@ -8,5 +8,5 @@ int main() {
     myTree.buildTree(text);
     myTree.printTree();
 
-    return 0; // Indicates successful completion
+    return 0;
 }
