@@ -1,66 +1,65 @@
 #include "HuffmanTree.hpp"
-#include <string>
 #include <queue>
 #include <iostream>
 #include <iomanip>
 
-HuffmanTree::frequencyTable HuffmanTree::createTable(const std::string& txt) const{
-    HuffmanTree::frequencyTable table;
-    for(char c : txt){
+HuffmanTree::FrequencyTable HuffmanTree::createFrequencyTable(const std::string& txt) const {
+    FrequencyTable table;
+    for (char c : txt) {
         table[c] += 1;
     }
-
     return table;
 }
 
+void HuffmanTree::buildTree(const std::string& txt) {
+    FrequencyTable fTable = createFrequencyTable(txt);
+    std::priority_queue<TreeNode*, std::vector<TreeNode*>, GreaterFrequency> pq;
 
-void HuffmanTree::buildTree(const std::string& txt){
-    HuffmanTree::frequencyTable fTable = createTable(txt);
-    std::priority_queue<TreeNode*, std::vector<TreeNode*>, HuffmanTree::greaterFrequency> pq;
-    for(auto pair : fTable){
-        TreeNode* newNode = new TreeNode(pair.first, pair.second);
-        pq.push(newNode);
+    for (auto pair : fTable) {
+        pq.push(new TreeNode(pair.first, pair.second));
     }
 
-    while(pq.size() > 1){
-        TreeNode* left{pq.top()};
+    while (pq.size() > 1) {
+        TreeNode* left = pq.top();
         pq.pop();
-        TreeNode* right{pq.top()};
+        TreeNode* right = pq.top();
         pq.pop();
+
         TreeNode* newNode = new TreeNode('#', left->getFrequency() + right->getFrequency());
         newNode->m_left = left;
         newNode->m_right = right;
         pq.push(newNode);
     }
 
-    m_root = pq.top();
+    if (!pq.empty()) {
+        m_root = pq.top();
+    }
 }
 
-void HuffmanTree::printTree() const{
-    helpPrint(m_root, 0);
+void HuffmanTree::printTree() const {
+    printTreeNode(m_root, 0);
 }
 
-void HuffmanTree::helpPrint(TreeNode* root, int spaces) const{
-    if(root == nullptr) return;
+void HuffmanTree::printTreeNode(TreeNode* root, int spaces) const {
+    if (root == nullptr) return;
     spaces += 10;
 
-    helpPrint(root->m_right, spaces);
+    printTreeNode(root->m_right, spaces);
 
-    std::cout <<'\n';
-    
-    std::cout <<std::setw(spaces)<<std::right<<root->getSymbol() <<':'<<root->getFrequency()<<'\n';
+    std::cout << '\n';
+    std::cout << std::setw(spaces) << std::right << root->getSymbol() << ':' << root->getFrequency() << '\n';
 
-    helpPrint(root->m_left, spaces);
+    printTreeNode(root->m_left, spaces);
 }
 
-HuffmanTree::~HuffmanTree(){
-    helpDestruct(m_root);
+HuffmanTree::~HuffmanTree() {
+    destroyTree(m_root);
 }
 
-void HuffmanTree::helpDestruct(TreeNode* root){
-    if(root != nullptr){
-        helpDestruct(root->m_left);
-        helpDestruct(root->m_right);
+void HuffmanTree::destroyTree(TreeNode* root) {
+    if (root != nullptr) {
+        destroyTree(root->m_left);
+        destroyTree(root->m_right);
         delete root;
     }
 }
