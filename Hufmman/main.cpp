@@ -4,7 +4,7 @@
 
 int main() {
     HuffmanTree myTree;
-    std::string text{"Hello world!"};
+    std::string text{"This is my first code"};
     myTree.buildTree(text);
     myTree.printTree();
 
